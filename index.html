@@ -7,10 +7,11 @@
   <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 
   <style>
-    body { font-family: Arial; }
+    body { font-family: Arial; margin: 20px; }
     button { margin-right: 10px; }
     table { border-collapse: collapse; margin-top: 15px; }
     th, td { border: 1px solid black; padding: 5px; text-align: center; }
+    th { background-color: #eee; }
   </style>
 </head>
 <body>
@@ -45,7 +46,44 @@
   </table>
 </script>
 
-<script src="program5.js"></script>
+<script>
+"use strict";
+
+let allStudents = [];
+
+fetch("cit5students.json")
+  .then(r => r.json())
+  .then(data => {
+    allStudents = data;
+    showByMajor("CIT");
+  });
+
+function showByMajor(major) {
+  let source = document.getElementById("students-template").innerHTML;
+  let template = Handlebars.compile(source);
+
+  let list = allStudents.filter(function(s) {
+    return s.major === major;
+  });
+
+  let html = template({
+    major: major,
+    students: list
+  });
+
+  document.getElementById("output").innerHTML = html;
+}
+
+window.onload = function() {
+  document.getElementById("citBtn").onclick = function() {
+    showByMajor("CIT");
+  };
+  document.getElementById("busBtn").onclick = function() {
+    showByMajor("BUS");
+  };
+};
+</script>
 
 </body>
 </html>
+
