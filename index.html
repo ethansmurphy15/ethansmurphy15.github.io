@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Program 5</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+
+  <style>
+    body { font-family: Arial; }
+    button { margin-right: 10px; }
+    table { border-collapse: collapse; margin-top: 15px; }
+    th, td { border: 1px solid black; padding: 5px; text-align: center; }
+  </style>
+</head>
+<body>
+
+<h1>Select a Major</h1>
+
+<button id="citBtn">CIT Majors</button>
+<button id="busBtn">Business Majors</button>
+
+<div id="output"></div>
+
+<script id="students-template" type="text/x-handlebars-template">
+  <h2>We filter our dataset by major</h2>
+  <p>{{major}}</p>
+
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Major</th>
+      <th>Midterm</th>
+      <th>Final</th>
+    </tr>
+
+    {{#each students}}
+    <tr>
+      <td>{{name}}</td>
+      <td>{{major}}</td>
+      <td>{{midterm}}</td>
+      <td>{{final}}</td>
+    </tr>
+    {{/each}}
+  </table>
+</script>
+
+<script src="program5.js"></script>
+
+</body>
+</html>
