@@ -1,89 +1,60 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>Program 5</title>
+<meta charset="UTF-8">
+<title>Program 5</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
 
-  <style>
-    body { font-family: Arial; margin: 20px; }
-    button { margin-right: 10px; }
-    table { border-collapse: collapse; margin-top: 15px; }
-    th, td { border: 1px solid black; padding: 5px; text-align: center; }
-    th { background-color: #eee; }
-  </style>
+<style>
+body{font-family:Arial;margin:20px;}
+.btn{margin:5px;}
+table{border-collapse:collapse;margin-top:15px;}
+th,td{border:1px solid black;padding:5px;text-align:center;}
+th{background:#eee;}
+</style>
 </head>
+
 <body>
 
-<h1>Select a Major</h1>
+<h2>Select a Major</h2>
 
-<button id="citBtn">CIT Majors</button>
-<button id="busBtn">Business Majors</button>
+<div>
+<button class="btn" onclick="getData('CIT')">CIT Majors</button>
+<button class="btn" onclick="getData('BUS')">Business Majors</button>
+</div>
 
-<div id="output"></div>
+<h3>We filter our dataset by major</h3>
 
-<script id="students-template" type="text/x-handlebars-template">
-  <h2>We filter our dataset by major</h2>
-  <p>{{major}}</p>
+<div id="studentTable"></div>
 
-  <table>
-    <tr>
-      <th>Name</th>
-      <th>Major</th>
-      <th>Midterm</th>
-      <th>Final</th>
-    </tr>
+</body>
 
-    {{#each students}}
-    <tr>
-      <td>{{name}}</td>
-      <td>{{major}}</td>
-      <td>{{midterm}}</td>
-      <td>{{final}}</td>
-    </tr>
-    {{/each}}
-  </table>
+<script type="text/x-handlebars-template" id="studentTemplate">
+<table>
+<tr><th>Name</th><th>Major</th><th>Midterm</th><th>Final</th></tr>
+{{#each rows}}
+<tr>
+<td>{{name}}</td><td>{{major}}</td><td>{{midterm}}</td><td>{{final}}</td>
+</tr>
+{{/each}}
+</table>
 </script>
 
 <script>
-"use strict";
-
-let allStudents = [];
-
-fetch("cit5students.json")
-  .then(r => r.json())
-  .then(data => {
-    allStudents = data;
-    showByMajor("CIT");
-  });
-
-function showByMajor(major) {
-  let source = document.getElementById("students-template").innerHTML;
-  let template = Handlebars.compile(source);
-
-  let list = allStudents.filter(function(s) {
-    return s.major === major;
-  });
-
-  let html = template({
-    major: major,
-    students: list
-  });
-
-  document.getElementById("output").innerHTML = html;
+async function getData(m){
+  let r = await fetch("cit5students.json");
+  if(r.ok){
+    let d = await r.json();
+    let list = d.filter(x => x.major == m);
+    let t = document.getElementById("studentTemplate").innerHTML;
+    let c = Handlebars.compile(t);
+    document.getElementById("studentTable").innerHTML = c({rows:list});
+  } else {
+    document.getElementById("studentTable").innerHTML = "Error loading data";
+  }
 }
-
-window.onload = function() {
-  document.getElementById("citBtn").onclick = function() {
-    showByMajor("CIT");
-  };
-  document.getElementById("busBtn").onclick = function() {
-    showByMajor("BUS");
-  };
-};
 </script>
 
-</body>
 </html>
 
